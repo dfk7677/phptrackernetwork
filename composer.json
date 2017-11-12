@@ -1,0 +1,23 @@
+{
+    "name": "dfk_7677/phptrackernetwork",
+    "description": "PHP API wrapper for Tracker Network API",
+    "license": "MIT",
+    "keywords": ["games", "statistics", "tracker", "battlefield", "pubg"],
+    "authors": [
+        {
+            "name": "Dionysis Kapatsoris",
+            "email": "dfk_7677@yahoo.com"
+        }
+    ],    
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "6.4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "dfk7677\\phptrackernetwrok\\": "src"
+        }
+    }
+}
