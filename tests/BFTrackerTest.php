@@ -1,4 +1,9 @@
 <?php
+/**
+ * 
+ */
+
+
 require 'src/BFTracker.php';
 require 'src/BFTrackerException.php';
 use PHPUnit\Framework\TestCase;
@@ -6,22 +11,48 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Exception\RequestException;
 use dfk7677\phptrackernetwork\BFTracker;
 use dfk7677\phptrackernetwork\BFTrackerException;
  
 class BFTrackerTest extends TestCase
 {
-    public function testStatsByNicknameForInvalidAPIKey()
+    protected $bftracker;
+
+    protected function setUp()
+    {
+        $this->bftracker = new BFTracker("apikey");
+    }
+
+    public function testForInvalidAPIKey()
     {
         $this->expectException(BFTrackerException::class);
         $this->expectExceptionMessage('Bad Request');
         $this->expectExceptionCode(400);
-        $apiKey = "incorrectapikey";        
-        $mockClient = $this->_getMockClient($apiKey);
-        $mockClient->request('GET', '/');
+        try {            
+            $mock = new MockHandler([new RequestException("Bad Request", new Request('GET', 'test'))]);
+            $handler = HandlerStack::create($mock);
+            $client = new Client(['handler' => $handler]);
+            $response = $client->request('GET', '/');
+            $body = $response->getBody();
+            $json = json_decode($body->getContents());
+            if (!$json->success) {
+                $bftracker->_throwException("No account with that platform ID found.");
+            }
+            return $json;
+        } catch (ClientException $e) {
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+                $bftracker->_throwException($response->getBody()->getContents());
+            }
+            $bftracker->_throwException("Unknown exception");
+        }
+        
         
     }
 
+    /*
     public function testStatsByIdForInvalidAPIKey()
     {
         $this->expectException(BFTrackerException::class);
@@ -69,35 +100,7 @@ class BFTrackerTest extends TestCase
         $response = $mockClient->request('GET', '/');
         $this->assertEquals($response->getStatusCode(), 200);
     }
-
-    private function _getMockClient($apiKey, $id = null, $nickname = null)
-    {
-        $body = "Mock server response";
-        if ($apiKey != "correctapikey") {
-            $response = new BFTrackerException("Bad Request");
-        } else {
-            if (is_null($nickname)) {
-                if ($id == 176484954) {
-                    $response = new Response(200, [], $body);
-                } else {
-                    $response = new BFTrackerException("No account with that platform ID found.");
-                }
-            } else {
-                if ($nickname == "dfk_7677") {
-                    $response = new Response(200, [], $body);
-                } else {
-                    $response = new BFTrackerException("No account with that nickname found.");
-                }
-            }
-            
-        }
-        
-        
-        $mock = new MockHandler([$response]);
-        $handler = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handler]);
-       
-        return $client;
-    }
+*/
+    
  
 }
