@@ -10,7 +10,6 @@
 
 namespace dfk7677\phptrackernetwork;
 
-use dfk7677\phptrackernetwork\BFTrackerException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
@@ -57,6 +56,7 @@ class BFTracker
      */
     public function getBasicStatsByNickname($nickname, $platform = 3, $game = "tunguska")
     {
+        $path = "BasicStats";
         try {
             $response = $this->_client->request(
                 'GET',
@@ -71,7 +71,15 @@ class BFTracker
             $content = $e->getResponse()->getBody()->getContents();
             $object = json_decode($content);
             if (json_last_error() != JSON_ERROR_NONE) {
-                $object = json_decode('{"successful": false, "bad_request": true}');
+                $object = json_decode(
+                    '{
+                        "successful": false,
+                        "errorData": {
+                            "errorMessage": "Incorrect API key.",
+                            "errorCode": 1
+                        }
+                    }'
+                );
             }
             return $object;
         }
@@ -106,7 +114,15 @@ class BFTracker
                 $content = $e->getResponse()->getBody()->getContents();
                 $object = json_decode($content);
                 if (json_last_error() != JSON_ERROR_NONE) {
-                    $object = json_decode('{"successful": false, "bad_request": true}');
+                    $object = json_decode(
+                        '{
+                            "successful": false,
+                            "errorData": {
+                                "errorMessage": "Incorrect API key.",
+                                "errorCode": 1
+                            }
+                        }'
+                    );
                 }
                 return $object;
             }
