@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "dfk7677\\phptrackernetwrok\\": "src"
+            "dfk7677\\phptrackernetwork\\": "src"
         }
     }
 }
