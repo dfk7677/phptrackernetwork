@@ -51,7 +51,7 @@ class BFTracker
     }
 
     /** 
-     * GetBasicStatsByNickname function
+     * Function getBasicStatsByNickname 
      * Returns Basic Stats for player by his Origin username
      * 
      * @param string  $nickname Origin username
@@ -86,7 +86,7 @@ class BFTracker
     }
 
     /** 
-     * GetBasicStatsById function
+     * Function getBasicStatsById
      * Returns Basic Stats for player by his Origin ID
      * 
      * @param integer $id       Origin ID
@@ -101,6 +101,75 @@ class BFTracker
         $game = "tunguska"
     ) {
         $path = "Stats/BasicStats";
+        try {            
+            $response = $this->_client->request(
+                'GET',
+                $this->_baseUri.$path,
+                [
+                    'headers' => ['TRN-Api-Key' => $this->_apiKey],
+                    'query' => ['platform' => $platform,
+                    'game' => $game,
+                    'personaId' => $id
+                    ]
+                ]
+            );            
+            return json_decode($response->getBody()->getContents());            
+        } catch (ClientException $e) {
+            return $this->_handleException($e);           
+        }
+    }
+
+    /** 
+     * Function getDetailedStatsByNickname function
+     * Returns Detailed Stats for player by his Origin username
+     * 
+     * @param string  $nickname Origin username
+     * @param integer $platform Platform ID
+     * @param string  $game     Game codename
+     * 
+     * @return object
+     */
+    public function getDetailedStatsByNickname(
+        $nickname,
+        $platform = 3,
+        $game = "tunguska"
+    ) {
+        $path = "Stats/DetailedStats";
+        try {
+            $response = $this->_client->request(
+                'GET',
+                $this->_baseUri.$path,
+                [
+                    'headers' => ['TRN-Api-Key' => $this->_apiKey],
+                    'query' => [
+                        'platform' => $platform,
+                        'game' => $game,
+                        'displayName' => $nickname
+                        ]
+                ]
+            ); 
+            return json_decode($response->getBody()->getContents());
+        } catch (ClientException $e) {
+            return $this->_handleException($e);
+        }       
+    }
+
+    /** 
+     * Function getDetailedStatsById function
+     * Returns Detailed Stats for player by his Origin ID
+     * 
+     * @param integer $id       Origin ID
+     * @param integer $platform Platform ID
+     * @param string  $game     Game codename
+     * 
+     * @return object
+     */
+    public function getDetailedStatsById(
+        $id,
+        $platform = 3,
+        $game = "tunguska"
+    ) {
+        $path = "Stats/DetailedStats";
         try {            
             $response = $this->_client->request(
                 'GET',
