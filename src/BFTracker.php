@@ -1,12 +1,12 @@
 <?php
 /**
  * BFTracker.php.
- *  
+ *
  * PHP version 7.1
- * 
- * @package PHPTrackerNetwork
+ *
  * @author  Dionysis Kapatsoris <dfk_7677@yahoo.com>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @link    https://github.com/dfk7677/phptrackernetwork
  */
 
@@ -18,28 +18,27 @@ use GuzzleHttp\Psr7\Response;
 
 /**
  * Class BFTracker.
- *  
- * @package PHPTrackerNetwork
+ *
  * @author  Dionysis Kapatsoris <dfk_7677@yahoo.com>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @link    https://github.com/dfk7677/phptrackernetwork
  */
-
 class BFTracker
 {
     protected $baseUri;
     protected $client;
     protected $apiKey;
-    
-    /** 
+
+    /**
      * Construction function
      * Initialization of variables.
-     * 
+     *
      * @param string $apiKey  Tracker Network API key
      * @param string $baseUri Base URI for Battlefield stats API calls
      */
     public function __construct(
-        $apiKey, 
+        $apiKey,
         $baseUri = 'https://battlefieldtracker.com/bf1/api/'
     ) {
         $this->baseUri = $baseUri;
@@ -47,19 +46,17 @@ class BFTracker
         $this->apiKey = $apiKey;
     }
 
-    
-
-    /** 
+    /**
      * Function handleException
      * Returns object response depending on response exception.
-     * 
+     *
      * @param ClientException $exception Guzzle thrown exception
-     * 
-     * @return object 
+     *
+     * @return object
      */
     protected function handleException($exception)
     {
-        if ($exceptione->hasResponse()) {                
+        if ($exceptione->hasResponse()) {
             $content = $exception->getResponse()->getBody()->getContents();
             $object = json_decode($content);
             if (json_last_error() != JSON_ERROR_NONE) {
@@ -73,6 +70,7 @@ class BFTracker
                     }'
                 );
             }
+
             return $object;
         } else {
             return json_decode(
@@ -86,45 +84,44 @@ class BFTracker
             );
         }
     }
-
 }
 
 /**
- * Class BFTrackerStats 
+ * Class BFTrackerStats
  * Class to retrive stats from BFTracker.
- * 
- * @package PHPTrackerNetwork
+ *
  * @author  Dionysis Kapatsoris <dfk_7677@yahoo.com>
  * @license https://opensource.org/licenses/MIT MIT
+ *
  * @link    https://github.com/dfk7677/phptrackernetwork
  */
-
 class BFTrackerStats extends BFTracker
 {
     private $_path;
-    /** 
+
+    /**
      * Construction function
      * Initialization of variables.
-     * 
+     *
      * @param string $apiKey  Tracker Network API key
      * @param string $baseUri Base URI for Battlefield stats API calls
      */
     public function __construct(
-        $apiKey, 
+        $apiKey,
         $baseUri = 'https://battlefieldtracker.com/bf1/api/'
     ) {
         $this->_path = 'Stats/';
         parent::__construct($apiKey, $baseUri);
     }
-    
-    /** 
-     * Function getBasicStatsByNickname 
-     * Returns Basic Stats for player by his Origin username
-     * 
-     * @param string  $nickname Origin username
-     * @param integer $platform Platform ID
-     * @param string  $game     Game codename
-     * 
+
+    /**
+     * Function getBasicStatsByNickname
+     * Returns Basic Stats for player by his Origin username.
+     *
+     * @param string $nickname Origin username
+     * @param int    $platform Platform ID
+     * @param string $game     Game codename
+     *
      * @return object
      */
     public function getBasicStatsByNickname(
@@ -133,127 +130,135 @@ class BFTrackerStats extends BFTracker
         $game = 'tunguska'
     ) {
         $functionPath = 'BasicStats';
+
         try {
             $response = $this->client->request(
                 'GET',
                 $this->baseUri.$this->_path.$functionPath,
                 [
                     'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query' => [
+                    'query'   => [
                         'platform'    => $platform,
                         'game'        => $game,
-                        'displayName' => $nickname
-                        ]
+                        'displayName' => $nickname,
+                        ],
                 ]
-            ); 
+            );
+
             return json_decode($response->getBody()->getContents());
         } catch (ClientException $e) {
             return $this->handleException($e);
-        }       
+        }
     }
 
-    /** 
+    /**
      * Function getBasicStatsById
-     * Returns Basic Stats for player by his Origin ID
-     * 
+     * Returns Basic Stats for player by his Origin ID.
+     *
      * @param int    $id       Origin ID
      * @param int    $platform Platform ID
      * @param string $game     Game codename
-     * 
+     *
      * @return object
      */
     public function getBasicStatsById(
         $id,
         $platform = 3,
-        $game = "tunguska"
+        $game = 'tunguska'
     ) {
-        $functionPath = "BasicStats";
-        try {            
-            $response = $this->client->request(
-                'GET',
-                $this->baseUri.$this->_path.$functionPath,
-                [
-                    'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query' => [
-                        'platform'  => $platform,
-                        'game'      => $game,
-                        'personaId' => $id
-                    ]
-                ]
-            );            
-            return json_decode($response->getBody()->getContents());            
-        } catch (ClientException $e) {
-            return $this->handleException($e);           
-        }
-    }
+        $functionPath = 'BasicStats';
 
-    /** 
-     * Function getDetailedStatsByNickname
-     * Returns Detailed Stats for player by his Origin username.
-     * 
-     * @param string $nickname Origin username
-     * @param int    $platform Platform ID
-     * @param string $game     Game codename
-     * 
-     * @return object
-     */
-    public function getDetailedStatsByNickname(
-        $nickname,
-        $platform = 3,
-        $game = "tunguska"
-    ) {
-        $functionPath = "DetailedStats";
         try {
             $response = $this->client->request(
                 'GET',
                 $this->baseUri.$this->_path.$functionPath,
                 [
                     'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query' => [
-                        'platform'    => $platform,
-                        'game'        => $game,
-                        'displayName' => $nickname
-                        ]
+                    'query'   => [
+                        'platform'  => $platform,
+                        'game'      => $game,
+                        'personaId' => $id,
+                    ],
                 ]
-            ); 
+            );
+
             return json_decode($response->getBody()->getContents());
         } catch (ClientException $e) {
             return $this->handleException($e);
-        }       
+        }
     }
 
-    /** 
-     * Function getDetailedStatsById
-     * Returns Detailed Stats for player by his Origin ID.
-     * 
-     * @param int    $id       Origin ID
+    /**
+     * Function getDetailedStatsByNickname
+     * Returns Detailed Stats for player by his Origin username.
+     *
+     * @param string $nickname Origin username
      * @param int    $platform Platform ID
      * @param string $game     Game codename
-     * 
+     *
      * @return object
      */
-    public function getDetailedStatsById(
-        $id,
+    public function getDetailedStatsByNickname(
+        $nickname,
         $platform = 3,
-        $game = "tunguska"
+        $game = 'tunguska'
     ) {
-        $functionPath = "DetailedStats";
-        try {            
+        $functionPath = 'DetailedStats';
+
+        try {
             $response = $this->client->request(
                 'GET',
                 $this->baseUri.$this->_path.$functionPath,
                 [
                     'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query' => [
+                    'query'   => [
+                        'platform'    => $platform,
+                        'game'        => $game,
+                        'displayName' => $nickname,
+                        ],
+                ]
+            );
+
+            return json_decode($response->getBody()->getContents());
+        } catch (ClientException $e) {
+            return $this->handleException($e);
+        }
+    }
+
+    /**
+     * Function getDetailedStatsById
+     * Returns Detailed Stats for player by his Origin ID.
+     *
+     * @param int    $id       Origin ID
+     * @param int    $platform Platform ID
+     * @param string $game     Game codename
+     *
+     * @return object
+     */
+    public function getDetailedStatsById(
+        $id,
+        $platform = 3,
+        $game = 'tunguska'
+    ) {
+        $functionPath = 'DetailedStats';
+
+        try {
+            $response = $this->client->request(
+                'GET',
+                $this->baseUri.$this->_path.$functionPath,
+                [
+                    'headers' => ['TRN-Api-Key' => $this->apiKey],
+                    'query'   => [
                         'platform'  => $platform,
                         'game'      => $game,
-                        'personaId' => $id
-                    ]
+                        'personaId' => $id,
+                    ],
                 ]
-            );            
-            return json_decode($response->getBody()->getContents());            
+            );
+
+            return json_decode($response->getBody()->getContents());
         } catch (ClientException $e) {
-            return $this->handleException($e);           
+            return $this->handleException($e);
         }
     }
 }
