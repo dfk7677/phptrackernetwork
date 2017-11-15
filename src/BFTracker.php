@@ -1,14 +1,13 @@
 <?php
 /**
- * BFTracker.php
+ * BFTracker.php.
  *  
  * PHP version 7.1
  * 
- * @category API_Wrapper
- * @package  Phptrackernetwork
- * @author   Dionysis Kapatsoris <dfk_7677@yahoo.com>
- * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/dfk7677/phptrackernetwork
+ * @package PHPTrackerNetwork
+ * @author  Dionysis Kapatsoris <dfk_7677@yahoo.com>
+ * @license https://opensource.org/licenses/MIT MIT
+ * @link    https://github.com/dfk7677/phptrackernetwork
  */
 
 namespace dfk7677\phptrackernetwork;
@@ -18,13 +17,12 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 
 /**
- * Class BFTracker
+ * Class BFTracker.
  *  
- * @category API_Wrapper
- * @package  BFTracker
- * @author   Dionysis Kapatsoris <dfk_7677@yahoo.com>
- * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/dfk7677/phptrackernetwork
+ * @package PHPTrackerNetwork
+ * @author  Dionysis Kapatsoris <dfk_7677@yahoo.com>
+ * @license https://opensource.org/licenses/MIT MIT
+ * @link    https://github.com/dfk7677/phptrackernetwork
  */
 
 class BFTracker
@@ -35,17 +33,17 @@ class BFTracker
     
     /** 
      * Construction function
-     * Initialization of variables
+     * Initialization of variables.
      * 
      * @param string $apiKey  Tracker Network API key
      * @param string $baseUri Base URI for Battlefield stats API calls
      */
     public function __construct(
         $apiKey, 
-        $baseUri = "https://battlefieldtracker.com/bf1/api/"
+        $baseUri = 'https://battlefieldtracker.com/bf1/api/'
     ) {
         $this->baseUri = $baseUri;
-        $this->client = new Client;
+        $this->client = new Client();
         $this->apiKey = $apiKey;
     }
 
@@ -53,7 +51,7 @@ class BFTracker
 
     /** 
      * Function handleException
-     * Returns object response depending on response exception
+     * Returns object response depending on response exception.
      * 
      * @param ClientException $exception Guzzle thrown exception
      * 
@@ -92,15 +90,13 @@ class BFTracker
 }
 
 /**
- * Class BFTrackerStats
- *  
- * Class to retrive stats from BFTracker
+ * Class BFTrackerStats 
+ * Class to retrive stats from BFTracker.
  * 
- * @category API_Wrapper
- * @package  BFTracker
- * @author   Dionysis Kapatsoris <dfk_7677@yahoo.com>
- * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/dfk7677/phptrackernetwork
+ * @package PHPTrackerNetwork
+ * @author  Dionysis Kapatsoris <dfk_7677@yahoo.com>
+ * @license https://opensource.org/licenses/MIT MIT
+ * @link    https://github.com/dfk7677/phptrackernetwork
  */
 
 class BFTrackerStats extends BFTracker
@@ -108,16 +104,16 @@ class BFTrackerStats extends BFTracker
     private $_path;
     /** 
      * Construction function
-     * Initialization of variables
+     * Initialization of variables.
      * 
      * @param string $apiKey  Tracker Network API key
      * @param string $baseUri Base URI for Battlefield stats API calls
      */
     public function __construct(
         $apiKey, 
-        $baseUri = "https://battlefieldtracker.com/bf1/api/"
+        $baseUri = 'https://battlefieldtracker.com/bf1/api/'
     ) {
-        $this->_path = "Stats/";
+        $this->_path = 'Stats/';
         parent::__construct($apiKey, $baseUri);
     }
     
@@ -134,9 +130,9 @@ class BFTrackerStats extends BFTracker
     public function getBasicStatsByNickname(
         $nickname,
         $platform = 3,
-        $game = "tunguska"
+        $game = 'tunguska'
     ) {
-        $functionPath = "BasicStats";
+        $functionPath = 'BasicStats';
         try {
             $response = $this->client->request(
                 'GET',
@@ -144,8 +140,8 @@ class BFTrackerStats extends BFTracker
                 [
                     'headers' => ['TRN-Api-Key' => $this->apiKey],
                     'query' => [
-                        'platform' => $platform,
-                        'game' => $game,
+                        'platform'    => $platform,
+                        'game'        => $game,
                         'displayName' => $nickname
                         ]
                 ]
@@ -160,9 +156,9 @@ class BFTrackerStats extends BFTracker
      * Function getBasicStatsById
      * Returns Basic Stats for player by his Origin ID
      * 
-     * @param integer $id       Origin ID
-     * @param integer $platform Platform ID
-     * @param string  $game     Game codename
+     * @param int    $id       Origin ID
+     * @param int    $platform Platform ID
+     * @param string $game     Game codename
      * 
      * @return object
      */
@@ -178,9 +174,10 @@ class BFTrackerStats extends BFTracker
                 $this->baseUri.$this->_path.$functionPath,
                 [
                     'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query' => ['platform' => $platform,
-                    'game' => $game,
-                    'personaId' => $id
+                    'query' => [
+                        'platform'  => $platform,
+                        'game'      => $game,
+                        'personaId' => $id
                     ]
                 ]
             );            
@@ -191,12 +188,12 @@ class BFTrackerStats extends BFTracker
     }
 
     /** 
-     * Function getDetailedStatsByNickname function
-     * Returns Detailed Stats for player by his Origin username
+     * Function getDetailedStatsByNickname
+     * Returns Detailed Stats for player by his Origin username.
      * 
-     * @param string  $nickname Origin username
-     * @param integer $platform Platform ID
-     * @param string  $game     Game codename
+     * @param string $nickname Origin username
+     * @param int    $platform Platform ID
+     * @param string $game     Game codename
      * 
      * @return object
      */
@@ -213,8 +210,8 @@ class BFTrackerStats extends BFTracker
                 [
                     'headers' => ['TRN-Api-Key' => $this->apiKey],
                     'query' => [
-                        'platform' => $platform,
-                        'game' => $game,
+                        'platform'    => $platform,
+                        'game'        => $game,
                         'displayName' => $nickname
                         ]
                 ]
@@ -226,12 +223,12 @@ class BFTrackerStats extends BFTracker
     }
 
     /** 
-     * Function getDetailedStatsById function
-     * Returns Detailed Stats for player by his Origin ID
+     * Function getDetailedStatsById
+     * Returns Detailed Stats for player by his Origin ID.
      * 
-     * @param integer $id       Origin ID
-     * @param integer $platform Platform ID
-     * @param string  $game     Game codename
+     * @param int    $id       Origin ID
+     * @param int    $platform Platform ID
+     * @param string $game     Game codename
      * 
      * @return object
      */
@@ -247,9 +244,10 @@ class BFTrackerStats extends BFTracker
                 $this->baseUri.$this->_path.$functionPath,
                 [
                     'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query' => ['platform' => $platform,
-                    'game' => $game,
-                    'personaId' => $id
+                    'query' => [
+                        'platform'  => $platform,
+                        'game'      => $game,
+                        'personaId' => $id
                     ]
                 ]
             );            
