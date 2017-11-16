@@ -2,3 +2,4 @@ vendor
 composer.lock
 docs
 tests
+.php_cs_cache

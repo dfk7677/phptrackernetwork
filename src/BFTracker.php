@@ -11,10 +11,9 @@
  */
 
 namespace dfk7677\phptrackernetwork;
+require('src/TrackerNetworkClient.php');
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Response;
+use dfk7677\phptrackernetwork\TrackerNetworkClient;
 
 /**
  * Class BFTracker.
@@ -39,50 +38,9 @@ class BFTracker
      */
     public function __construct(
         $apiKey,
-        $baseUri = 'https://battlefieldtracker.com/bf1/api/'
+        $baseUri = "https://battlefieldtracker.com/bf1/api/"
     ) {
-        $this->baseUri = $baseUri;
-        $this->client = new Client();
-        $this->apiKey = $apiKey;
-    }
-
-    /**
-     * Function handleException
-     * Returns object response depending on response exception.
-     *
-     * @param ClientException $exception Guzzle thrown exception
-     *
-     * @return object
-     */
-    protected function handleException($exception)
-    {
-        if ($exceptione->hasResponse()) {
-            $content = $exception->getResponse()->getBody()->getContents();
-            $object = json_decode($content);
-            if (json_last_error() != JSON_ERROR_NONE) {
-                $object = json_decode(
-                    '{
-                        "successful": false,
-                        "errorData": {
-                            "errorMessage": "Incorrect API key.",
-                            "errorCode": 1
-                        }
-                    }'
-                );
-            }
-
-            return $object;
-        } else {
-            return json_decode(
-                '{
-                    "successful": false,
-                    "errorData": {
-                        "errorMessage": "Unknown exception.",
-                        "errorCode": 3
-                    }
-                }'
-            );
-        }
+        $this->client = new TrackerNetworkClient($apiKey, $baseUri);
     }
 }
 
@@ -130,25 +88,12 @@ class BFTrackerStats extends BFTracker
         $game = 'tunguska'
     ) {
         $functionPath = 'BasicStats';
-
-        try {
-            $response = $this->client->request(
-                'GET',
-                $this->baseUri.$this->_path.$functionPath,
-                [
-                    'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query'   => [
-                        'platform'    => $platform,
-                        'game'        => $game,
-                        'displayName' => $nickname,
-                        ],
-                ]
-            );
-
-            return json_decode($response->getBody()->getContents());
-        } catch (ClientException $e) {
-            return $this->handleException($e);
-        }
+        $query = [
+            'platform'    => $platform,
+            'game'        => $game,
+            'displayName' => $nickname
+        ];
+        return $this->client->TRNrequest($this->_path.$functionPath, $query);
     }
 
     /**
@@ -167,25 +112,12 @@ class BFTrackerStats extends BFTracker
         $game = 'tunguska'
     ) {
         $functionPath = 'BasicStats';
-
-        try {
-            $response = $this->client->request(
-                'GET',
-                $this->baseUri.$this->_path.$functionPath,
-                [
-                    'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query'   => [
-                        'platform'  => $platform,
-                        'game'      => $game,
-                        'personaId' => $id,
-                    ],
-                ]
-            );
-
-            return json_decode($response->getBody()->getContents());
-        } catch (ClientException $e) {
-            return $this->handleException($e);
-        }
+        $query = [
+            'platform'  => $platform,
+            'game'      => $game,
+            'personaId' => $id
+        ];
+        return $this->client->TRNrequest($this->_path.$functionPath, $query);
     }
 
     /**
@@ -204,25 +136,12 @@ class BFTrackerStats extends BFTracker
         $game = 'tunguska'
     ) {
         $functionPath = 'DetailedStats';
-
-        try {
-            $response = $this->client->request(
-                'GET',
-                $this->baseUri.$this->_path.$functionPath,
-                [
-                    'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query'   => [
-                        'platform'    => $platform,
-                        'game'        => $game,
-                        'displayName' => $nickname,
-                        ],
-                ]
-            );
-
-            return json_decode($response->getBody()->getContents());
-        } catch (ClientException $e) {
-            return $this->handleException($e);
-        }
+        $query = [
+            'platform'    => $platform,
+            'game'        => $game,
+            'displayName' => $nickname
+        ];
+        return $this->client->TRNrequest($this->_path.$functionPath, $query);
     }
 
     /**
@@ -241,24 +160,11 @@ class BFTrackerStats extends BFTracker
         $game = 'tunguska'
     ) {
         $functionPath = 'DetailedStats';
-
-        try {
-            $response = $this->client->request(
-                'GET',
-                $this->baseUri.$this->_path.$functionPath,
-                [
-                    'headers' => ['TRN-Api-Key' => $this->apiKey],
-                    'query'   => [
-                        'platform'  => $platform,
-                        'game'      => $game,
-                        'personaId' => $id,
-                    ],
-                ]
-            );
-
-            return json_decode($response->getBody()->getContents());
-        } catch (ClientException $e) {
-            return $this->handleException($e);
-        }
+        $query = [
+            'platform'  => $platform,
+            'game'      => $game,
+            'personaId' => $id
+        ];
+        return $this->client->TRNrequest($this->_path.$functionPath, $query);
     }
 }
