@@ -46,7 +46,7 @@ class BFTracker
 
 /**
  * Class BFTrackerStats
- * Class to retrive stats from BFTracker.
+ * Class to retrieve stats from BFTracker.
  *
  * @author  Dionysis Kapatsoris <dfk_7677@yahoo.com>
  * @license https://opensource.org/licenses/MIT MIT
@@ -55,8 +55,6 @@ class BFTracker
  */
 class BFTrackerStats extends BFTracker
 {
-    private $_path;
-
     /**
      * Construction function
      * Initialization of variables.
@@ -66,15 +64,14 @@ class BFTrackerStats extends BFTracker
      */
     public function __construct(
         $apiKey,
-        $baseUri = 'https://battlefieldtracker.com/bf1/api/'
+        $baseUri = 'https://battlefieldtracker.com/bf1/api/Stats/'
     ) {
-        $this->_path = 'Stats/';
         parent::__construct($apiKey, $baseUri);
     }
 
     /**
      * Function getBasicStatsByNickname
-     * Returns Basic Stats for player by his Origin username.
+     * Returns Basic Stats for player by player's Origin username.
      *
      * @param string $nickname Origin username
      * @param int    $platform Platform ID
@@ -93,12 +90,12 @@ class BFTrackerStats extends BFTracker
             'game'        => $game,
             'displayName' => $nickname
         ];
-        return $this->client->TRNrequest($this->_path.$functionPath, $query);
+        return $this->client->TRNrequest($functionPath, $query);
     }
 
     /**
      * Function getBasicStatsById
-     * Returns Basic Stats for player by his Origin ID.
+     * Returns Basic Stats for player by player's Origin ID.
      *
      * @param int    $id       Origin ID
      * @param int    $platform Platform ID
@@ -117,12 +114,12 @@ class BFTrackerStats extends BFTracker
             'game'      => $game,
             'personaId' => $id
         ];
-        return $this->client->TRNrequest($this->_path.$functionPath, $query);
+        return $this->client->TRNrequest($functionPath, $query);
     }
 
     /**
      * Function getDetailedStatsByNickname
-     * Returns Detailed Stats for player by his Origin username.
+     * Returns Detailed Stats for player by player's Origin username.
      *
      * @param string $nickname Origin username
      * @param int    $platform Platform ID
@@ -141,12 +138,12 @@ class BFTrackerStats extends BFTracker
             'game'        => $game,
             'displayName' => $nickname
         ];
-        return $this->client->TRNrequest($this->_path.$functionPath, $query);
+        return $this->client->TRNrequest($functionPath, $query);
     }
 
     /**
      * Function getDetailedStatsById
-     * Returns Detailed Stats for player by his Origin ID.
+     * Returns Detailed Stats for player by player's Origin ID.
      *
      * @param int    $id       Origin ID
      * @param int    $platform Platform ID
@@ -165,6 +162,6 @@ class BFTrackerStats extends BFTracker
             'game'      => $game,
             'personaId' => $id
         ];
-        return $this->client->TRNrequest($this->_path.$functionPath, $query);
+        return $this->client->TRNrequest($functionPath, $query);
     }
 }

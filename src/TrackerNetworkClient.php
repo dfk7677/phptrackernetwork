@@ -85,7 +85,7 @@ class TrackerNetworkClient extends Client
      */
     protected function handleException($exception)
     {
-        if ($exceptione->hasResponse()) {
+        if ($exception->hasResponse()) {
             $content = $exception->getResponse()->getBody()->getContents();
             $object = json_decode($content);
             if (json_last_error() != JSON_ERROR_NONE) {
