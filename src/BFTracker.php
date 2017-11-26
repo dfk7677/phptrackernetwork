@@ -11,7 +11,6 @@
  */
 
 namespace dfk7677\phptrackernetwork;
-require('src/TrackerNetworkClient.php');
 
 use dfk7677\phptrackernetwork\TrackerNetworkClient;
 
